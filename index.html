@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AI时代人类元能力测评 · 第二版</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --text:#1f2430;
+      --muted:#667085;
+      --line:#e7ebf3;
+      --primary:#5b5bd6;
+      --primary2:#7b61ff;
+      --soft:#eef0ff;
+      --radius:22px;
+      --shadow:0 12px 30px rgba(34,43,72,.08);
+      --max:780px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+      background:linear-gradient(180deg,#f6f8fc 0%,#eef2fb 100%);
+      color:var(--text);
+    }
+    .wrap{max-width:var(--max);margin:0 auto;padding:20px 16px 48px}
+    .card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px 16px;
+      margin-top:16px;
+    }
+    .hidden{display:none!important}
+    .badge{
+      display:inline-block;
+      padding:7px 12px;
+      border-radius:999px;
+      background:var(--soft);
+      color:var(--primary);
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+    h1,h2,h3,p{margin:0}
+    .title{font-size:28px;line-height:1.22;font-weight:900;letter-spacing:-.03em}
+    .sub{margin-top:12px;color:var(--muted);line-height:1.8;font-size:15px}
+    .tiny{margin-top:10px;color:var(--muted);font-size:12px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    button{
+      appearance:none;border:0;cursor:pointer;border-radius:16px;font-size:16px;font-weight:800;
+      transition:.18s ease;padding:14px 16px;
+    }
+    button:active{transform:scale(.98)}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 10px 24px rgba(91,91,214,.24)}
+    .btn-secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+    .btn-ghost{background:transparent;color:var(--muted)}
+    .progress-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;margin-bottom:10px}
+    .progress{height:10px;background:#edf1f7;border-radius:999px;overflow:hidden}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,#6b6bff 0%,#57c5cf 100%);transition:width .25s ease}
+    .q-index{color:var(--primary);font-size:14px;font-weight:800;margin-bottom:10px}
+    .q-title{font-size:24px;line-height:1.5;font-weight:850;letter-spacing:-.02em}
+    .ab-box{display:grid;gap:12px;margin-top:18px}
+    .ab-card{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+    .ab-tag{font-size:12px;font-weight:800;color:var(--primary);margin-bottom:8px}
+    .ab-text{font-size:15px;line-height:1.7}
+    .strength-grid{display:grid;gap:12px;margin-top:18px}
+    .option{width:100%;text-align:left;padding:14px 15px;border-radius:18px;border:1px solid var(--line);background:#fff;color:var(--text)}
+    .option.active{border-color:rgba(91,91,214,.25);background:linear-gradient(180deg,#f4f4ff 0%,#eefafd 100%);box-shadow:0 10px 24px rgba(91,91,214,.08)}
+    .option small{display:block;color:var(--muted);margin-top:4px}
+    .section-title{font-size:20px;font-weight:900;margin-bottom:12px}
+    .result-hero{display:grid;gap:10px;text-align:center}
+    .portrait{width:140px;height:140px;margin:0 auto}.portrait img{width:100%;height:100%;object-fit:contain}
+    .role-name{font-size:32px;line-height:1.15;font-weight:950;letter-spacing:-.03em}
+    .role-one{color:var(--primary);font-weight:800;font-size:16px;line-height:1.6}
+    .role-desc,.footer-note,.load-text{color:var(--muted);line-height:1.8;font-size:15px}
+    .list,.metric-list,.dim-list{display:grid;gap:12px}
+    .item{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+    .item strong{font-size:16px}
+    .score{color:var(--primary);font-weight:900;margin-left:6px}
+    .item p{margin-top:8px;color:var(--muted);line-height:1.7;font-size:14px}
+    .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:var(--soft);color:var(--primary);font-size:12px;font-weight:800;margin-left:8px}
+    canvas{width:100%!important;max-width:100%;height:330px!important}
+    .center{text-align:center}
+    .share-card{
+      width:360px; max-width:100%; margin:0 auto; background:linear-gradient(180deg,#ffffff 0%,#f5f2ff 100%);
+      border:1px solid #ebe7ff; border-radius:28px; padding:24px 20px; color:#1f2430;
+    }
+    .share-role{font-size:30px;font-weight:900;line-height:1.15;margin-top:6px}
+    .share-one{font-size:14px;color:#5b5bd6;font-weight:800;line-height:1.6;margin-top:8px}
+    .share-desc{font-size:14px;color:#5b6477;line-height:1.75;margin-top:12px}
+    .qr-wrap{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-top:18px}
+    .qr-note{font-size:12px;color:#667085;line-height:1.6;flex:1}
+    .qr{width:92px;height:92px;border-radius:12px;background:#fff;border:1px solid #ececf6;padding:6px;object-fit:contain}
+    .share-foot{margin-top:14px;font-size:11px;color:#7a7f8f;line-height:1.5}
+    @media (max-width:480px){
+      .title{font-size:24px}
+      .q-title{font-size:21px}
+      .role-name{font-size:28px}
+      .card{padding:18px 14px}
+      canvas{height:280px!important}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section id="screen-home">
+    <div class="card">
+      <div class="badge">AI时代人类元能力测评</div>
+      <h1 class="title">发现你在 AI 时代不可替代的元能力组合</h1>
+      <div class="row">
+        <button class="btn-primary" id="startBtn">开始测试</button>
+        <button class="btn-secondary hidden" id="resumeBtn">继续上次进度</button>
+        <button class="btn-ghost hidden" id="clearBtn">清除进度</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-quiz" class="hidden">
+    <div class="card">
+      <div class="progress-top">
+        <span id="progressText">1 / 56</span>
+        <span id="progressPercent">2%</span>
+      </div>
+      <div class="progress"><div class="bar" id="progressBar"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="q-index" id="questionIndex">第 1 题</div>
+      <h2 class="q-title" id="questionTitle"></h2>
+      <div class="ab-box">
+        <div class="ab-card">
+          <div class="ab-tag">选项 A</div>
+          <div class="ab-text" id="optionAText"></div>
+        </div>
+        <div class="ab-card">
+          <div class="ab-tag">选项 B</div>
+          <div class="ab-text" id="optionBText"></div>
+        </div>
+      </div>
+      <div class="strength-grid" id="strengthGrid"></div>
+      <div class="row">
+        <button class="btn-secondary" id="prevBtn">上一题</button>
+        <button class="btn-primary" id="nextBtn">下一题</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-loading" class="hidden">
+    <div class="card center">
+      <div class="badge">正在生成结果</div>
+      <h2 class="section-title">正在分析你的能力结构…</h2>
+      <p class="load-text">正在整理 7 维得分、Top3 排序与角色原型匹配。</p>
+    </div>
+  </section>
+
+  <section id="screen-result" class="hidden">
+    <div class="card result-hero">
+      <div class="badge">你的结果</div>
+      <div class="portrait" id="rolePortrait"></div>
+      <h2 class="role-name" id="roleName"></h2>
+      <div class="role-one" id="roleOne"></div>
+    </div>
+
+    <div class="card">
+      <h3 class="section-title">你的能力雷达图</h3>
+      <canvas id="radarChart"></canvas>
+    </div>
+
+    <div class="card">
+      <h3 class="section-title">角色解读</h3>
+      <p class="role-desc" id="roleDesc"></p>
+    </div>
+
+    <div class="card">
+      <h3 class="section-title">你的 Top3 能力</h3>
+      <div class="metric-list" id="top3List"></div>
+    </div>
+
+    <div class="card">
+      <h3 class="section-title">7维逐项解读</h3>
+      <div class="dim-list" id="dimList"></div>
+    </div>
+
+    <div class="card">
+      <p class="footer-note">Top3 是你本次得分最高的三个元能力维度。角色原型是基于 Top3 的聚类标签，帮你快速抓住自己的“能力形状”，不是职业也不是人格定论。元能力不是天赋，是可以训练的。</p>
+      <div class="row">
+        <button class="btn-primary" id="shareBtn">生成分享图</button>
+        <button class="btn-secondary" id="restartBtn">重新测试</button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="shareSection">
+      <h3 class="section-title">分享图预览</h3>
+      <div id="shareCard" class="share-card">
+        <div class="badge">AI时代人类元能力测评</div>
+        <div class="portrait" id="sharePortrait">🧠</div>
+        <div class="share-role" id="shareRole"></div>
+        <div class="share-one" id="shareOne"></div>
+        <div class="share-desc" id="shareDesc"></div>
+        <div class="qr-wrap">
+          <div class="qr-note">扫码测测你的元能力形状</div>
+          <img class="qr" id="qrImage" alt="二维码" />
+        </div>
+        <div class="share-foot">🧠 AI时代人类元能力测评 · 56道题发现你的能力形状</div>
+      </div>
+      <div class="row">
+        <button class="btn-primary" id="downloadShareBtn">保存分享图</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const STORAGE_KEY = 'meta_capability_test_v2';
+const SITE_URL = 'https://your-site-url.com/';
+
+const DIMENSIONS = {
+  COG:{id:'COG',name:'认知能力',short:'COG'},
+  META:{id:'META',name:'元认知与判断',short:'META'},
+  INT:{id:'INT',name:'复杂现实的整合能力',short:'INT'},
+  REL:{id:'REL',name:'关系与互动能力',short:'REL'},
+  SYM:{id:'SYM',name:'审美与象征化能力',short:'SYM'},
+  EMB:{id:'EMB',name:'身体性与具身感知',short:'EMB'},
+  ETH:{id:'ETH',name:'伦理与价值判断',short:'ETH'}
+};
+
+const QUESTIONS = [
+  {id:1,dim:'COG',stem:'面对复杂问题时，我通常会：',a:'先理清结构和关键因素再行动',b:'先从能做的部分入手推进'},
+  {id:2,dim:'COG',stem:'信息量很大时，我更倾向：',a:'快速筛出重点，集中精力攻关',b:'广泛浏览，确保不遗漏关键信息'},
+  {id:3,dim:'COG',stem:'别人讲一件复杂的事时，我更容易：',a:'抓住整体逻辑',b:'记住关键细节'},
+  {id:4,dim:'COG',stem:'学新知识时，我通常会：',a:'尝试和已有经验建立联系',b:'先把新内容本身吃透'},
+  {id:5,dim:'COG',stem:'遇到一个问题，我更习惯：',a:'先重新定义问题的边界',b:'直接寻找解决办法'},
+  {id:6,dim:'COG',stem:'事情变复杂时，我通常：',a:'拆成几个部分逐个击破',b:'找到核心矛盾重点突破'},
+  {id:7,dim:'COG',stem:'做决策前，我通常会：',a:'思考影响结果的关键变量',b:'综合过往经验快速判断'},
+  {id:8,dim:'COG',stem:'理解问题时，我更喜欢：',a:'用图表或结构来梳理',b:'用文字和叙述来理清'},
+
+  {id:9,dim:'META',stem:'形成一个看法后，我通常：',a:'会继续留意相反的信息',b:'会集中精力深化这个判断'},
+  {id:10,dim:'META',stem:'别人反对我时，我更倾向：',a:'先重新审视自己有没有盲点',b:'先把自己的逻辑完整表达出来'},
+  {id:11,dim:'META',stem:'信息不完整时，我通常：',a:'保持开放，暂不下结论',b:'先给出最佳判断再修正'},
+  {id:12,dim:'META',stem:'对自己的想法，我更常：',a:'怀疑自己是否在自我合理化',b:'对自己的判断比较有信心'},
+  {id:13,dim:'META',stem:'面对不确定的情况，我更常：',a:'接受“暂时不知道”的状态',b:'尽快形成一个工作假设'},
+  {id:14,dim:'META',stem:'回顾决策时，我会：',a:'更关注当时的思考过程',b:'更关注最终的结果'},
+  {id:15,dim:'META',stem:'发现判断错误时，我通常：',a:'主动调整观点',b:'谨慎验证后再调整'},
+  {id:16,dim:'META',stem:'日常中，我更像：',a:'经常反思“我是怎么想的”',b:'更多精力放在“事情本身怎么样”'},
+
+  {id:17,dim:'INT',stem:'朋友纠结一个大决定时，我会：',a:'脑子里同时转着好几个维度（钱、关系、意义、情绪）',b:'帮对方找到最关键的那一个因素'},
+  {id:18,dim:'INT',stem:'面对多方需求冲突，我更倾向：',a:'找到各方都能接受的方案',b:'找到客观上最优的方案'},
+  {id:19,dim:'INT',stem:'两个在乎的人闹矛盾，我更常：',a:'同时理解双方逻辑，不急着站队',b:'根据事实判断谁更有道理'},
+  {id:20,dim:'INT',stem:'做人生重大选择时，我更倾向：',a:'除了算利弊还想“这对我人生意味着什么”',b:'把利弊列清楚，选收益最大的'},
+  {id:21,dim:'INT',stem:'事情一团糟时，我更常：',a:'在混乱中快速锁定“现在最该做的那一件事”',b:'先把所有问题列出来逐个解决'},
+  {id:22,dim:'INT',stem:'原来相信的观点被推翻时，我更常：',a:'愿意重新搭一套理解框架',b:'仔细验证新证据再决定是否调整'},
+  {id:23,dim:'INT',stem:'遇到矛盾的信息或感受，我更常：',a:'让它们同时存在一会儿',b:'尽快理出一个一致的结论'},
+  {id:24,dim:'INT',stem:'组织活动时，我更擅长：',a:'同时照顾预算、偏好、时间、人际关系',b:'先定最重要的约束条件再安排其他'},
+
+  {id:25,dim:'REL',stem:'对话中，我更常：',a:'自然地关注对方的情绪变化',b:'专注把自己的想法表达清楚'},
+  {id:26,dim:'REL',stem:'别人情绪低落时，我更容易：',a:'先陪着，让对方感觉被接住',b:'帮对方分析问题、想办法解决'},
+  {id:27,dim:'REL',stem:'发生冲突时，我更在意：',a:'这段关系能不能继续走下去',b:'把事情的对错理清楚'},
+  {id:28,dim:'REL',stem:'别人话没说完整时，我更常：',a:'能感觉到对方想表达什么',b:'会请对方说得更具体一些'},
+  {id:29,dim:'REL',stem:'在关系中，我更容易：',a:'主动适应对方的节奏和需要',b:'坚持表达自己真实的想法'},
+  {id:30,dim:'REL',stem:'气氛发生微妙变化时，我通常：',a:'第一时间能察觉',b:'更关注谈话的具体内容'},
+  {id:31,dim:'REL',stem:'别人表达情绪时，我更常：',a:'先跟随和回应对方的感受',b:'给出具体的分析或建议'},
+  {id:32,dim:'REL',stem:'一段关系中，我更在意：',a:'是否有真实深入的连接',b:'是否沟通顺畅高效'},
+
+  {id:33,dim:'SYM',stem:'描述一段经历时，我更常：',a:'用画面、比喻或意象',b:'用时间线和具体事实'},
+  {id:34,dim:'SYM',stem:'理解一件事时，我常会：',a:'联想到某个象征或隐喻',b:'按事情的实际脉络理解'},
+  {id:35,dim:'SYM',stem:'回顾过去，我更容易：',a:'把经历串成一个有主题的故事',b:'按时间顺序逐件回忆'},
+  {id:36,dim:'SYM',stem:'表达感受时，我通常：',a:'觉得“说不太清但能感觉到”',b:'能比较直接准确地说出来'},
+  {id:37,dim:'SYM',stem:'面对复杂体验，我更常：',a:'试着找到它背后的意义',b:'试着把它的脉络理清楚'},
+  {id:38,dim:'SYM',stem:'更容易打动我的是：',a:'一种氛围、意境或某个画面',b:'一件具体的事或一句直白的话'},
+  {id:39,dim:'SYM',stem:'看到好的文字/艺术时，我更常：',a:'联想到自己的经历和感受',b:'关注作品本身的技法和内容'},
+  {id:40,dim:'SYM',stem:'整理自己的方式，我更靠：',a:'“表达”——写、说、画',b:'“思考”——在脑子里想清楚'},
+
+  {id:41,dim:'EMB',stem:'紧张时，我通常：',a:'能清楚感觉到身体哪里在发紧',b:'更多是心理层面的紧张感'},
+  {id:42,dim:'EMB',stem:'做决定时，我有时会：',a:'感觉身体在给我一种“提示”',b:'主要依赖理性分析'},
+  {id:43,dim:'EMB',stem:'日常中更容易注意到：',a:'呼吸、心跳、肌肉这些身体信号',b:'自己的想法和情绪变化'},
+  {id:44,dim:'EMB',stem:'感到疲劳时，我通常：',a:'能较早察觉并调整节奏',b:'会再坚持一段再休息'},
+  {id:45,dim:'EMB',stem:'情绪出现时，我通常：',a:'能感觉到它在身体里的位置（胸口、胃、肩膀）',b:'更像是脑子里的一种感觉'},
+  {id:46,dim:'EMB',stem:'在日常中，我会：',a:'时不时关注自己的身体状态',b:'注意力更多放在手头的事情上'},
+  {id:47,dim:'EMB',stem:'不舒服时，我的第一反应是：',a:'感受身体在传递什么信号',b:'分析不舒服的原因'},
+  {id:48,dim:'EMB',stem:'对我来说：',a:'身体感受和情绪是紧密相连的',b:'情绪更多是一种心理活动'},
+
+  {id:49,dim:'ETH',stem:'做决定时，我通常会：',a:'想“这对相关的人意味着什么”',b:'想“这是不是最有效的方案”'},
+  {id:50,dim:'ETH',stem:'面对选择，我更看重：',a:'长远会把我带向哪里',b:'当下的实际收益'},
+  {id:51,dim:'ETH',stem:'利益与原则冲突时，我更可能：',a:'守住原则',b:'灵活应对现实'},
+  {id:52,dim:'ETH',stem:'行动前我会问自己：',a:'“这是否符合我认同的价值”',b:'“这是否能有效解决问题”'},
+  {id:53,dim:'ETH',stem:'面对复杂问题，我更常：',a:'主动考虑不同立场的人怎么看',b:'从自己认为最合理的角度判断'},
+  {id:54,dim:'ETH',stem:'事情结果不好时，我更常：',a:'先反思自己当时的选择',b:'先分析外部环境的影响'},
+  {id:55,dim:'ETH',stem:'我更在意：',a:'做的事是不是“对的”',b:'做的事是不是“有效的”'},
+  {id:56,dim:'ETH',stem:'做完决定后，我更倾向：',a:'为后果负责',b:'关注下一步怎么推进'}
+];
+
+const ANSWER_OPTIONS = [
+  {value:3,label:'完全符合A'},
+  {value:2,label:'比较符合A'},
+  {value:1,label:'比较符合B'},
+  {value:0,label:'完全符合B'}
+];
+
+const ROLE_DETAILS = {
+  '雾中校准者':{icon:'img/role-01.png',one:'在不确定里仍能保持清醒的人',desc:'所有人都在往前冲的时候，你会停下来擦一擦镜片。你对结论有一种天然的警觉——像在浓雾中开车的人，知道眼前清晰的路标也可能是幻觉。你拆得开问题的骨架，也看得见每个选择暗处的代价。当AI把“看起来对”做到了极致，你守住的是那个更难的问题：它真的对吗？'},
+  '深潮潜听者':{icon:'img/role-02.png',one:'从身体的潮汐里听到真实方向的人',desc:'你的身体比头脑更早知道答案。呼吸变浅的那一刻，肩膀收紧的那一秒，胃底沉下去的那个瞬间——别人当作噪音的东西，你听成了潮汐。你习惯先潜入身体的暗流里采集信号，再浮上来用理性校准方向，最后把所有线索编织成一条整个人都说得通的路。世界越来越快、越来越抽象，你是那个还能沉到水下听见真实回声的人。'},
+  '共鸣织梦体':{icon:'img/role-03.png',one:'把感受变成可共享意义的人',desc:'你像一面极细的膜，空气里微小的振动都能让你共鸣。一个眼神的游移、一段沉默里藏着的颤抖、一句话说完后房间里温度的变化——这些旁人来不及注意的东西，都会落在你身上。更难得的是，你能把这些感受织成别人也碰得到的东西：一句话、一个画面、一种被传递出去仍然温热的体验。信息在加速，你守护的是人与人之间那层不可压缩的厚度。'},
+  '意义炼金师':{icon:'img/role-04.png',one:'把混乱经验熔成结构与象征的人',desc:'别人眼里一地碎玻璃，你看见的是一幅还没拼好的花窗。你天然地把散落的经历、矛盾的信号、不同层面的线索扔进同一个熔炉里，直到它们烧出一个有名字的形状——一段叙事、一个隐喻、一个终于“说得通”的结构。你同时握着解剖刀的精确和调色盘的直觉，对你来说，“正确”只是起点，“有意义”才值得留下来。AI可以无限生产格式完美的内容，你是那个往里注入灵魂的人。'},
+  '多系统调音师':{icon:'img/role-05.png',one:'在多方拉扯中找到“同时成立”解法的人',desc:'你的脑子里永远不只响着一个声部。人、钱、时间、情绪、规则、意义——六条旋律同时在跑，你居然能听出它们之间的和弦关系。你真的理解每一方的逻辑，然后创造一个更大的容器把它们装下。你既能读懂人的欲言又止，也能看清结构的承重极限。当问题越来越像一团打结的耳机线，你是那个有耐心一根一根理开、最后让所有人都还能继续听歌的人。'},
+  '边界守夜人':{icon:'img/role-06.png',one:'温和但不退让的人',desc:'你心里有一条线，它不是谁教的，是你自己一点一点长出来的。你接得住别人泼过来的情绪，也说得出温柔的“不”。群体在狂热的时候你反而更安静，因为你知道此刻最该做的事是检查自己的判断有没有被裹进去。你愿意为关系承担责任，也愿意为守住边界付出不被理解的代价。深夜里大家都睡了，你还亮着一盏灯。'},
+  '跨域跃迁者':{icon:'img/role-07.png',one:'在多个世界之间跳转并重新组装的人',desc:'你像一个在不同星球之间跳跃的旅行者，每到一个新世界，都能很快摸清它的地形。更厉害的是，你会回头检查自己画的地图有没有画歪，然后把几张不同星球的地图叠在一起，发现别人看不到的通道。你天然知道哪些路段该让AI开车、哪些弯必须自己掌舵。知识在爆炸，碎片漫天飞，你是那个能从碎片里拼出航线的人。'},
+  '柔性裁决者':{icon:'img/role-08.png',one:'不靠简单对错判断而是把复杂性算进来再决定的人',desc:'你做决定像下围棋——每落一子，脑中同时闪过的是全局的气、对手的呼吸、三十步之后的棋形。“对谁来说是对的”“代价落在谁身上”“十年后回头看会怎样”，这些问题在你心里同时运转。你有分析的锋利、价值观的锚、面对复杂性稳稳坐住的耐力。你追求的从来不是完美解，而是“在这些约束里，足够好且所有人都还扛得住的解”。当越来越多决策被交给算法，你坚持在每一个关键节点注入人的判断。'},
+  '镜面叙事者':{icon:'img/role-09.png',one:'能把人的感受照见并说出来的人',desc:'你身上有一面安静的镜子。朋友坐在你对面说了半天，突然你轻轻说了一句，对方愣住——“对，就是这样，你怎么知道的。”你能感受到别人正在经历什么，能用一个精准的比喻把它照映出来，同时还保持着一份清醒：这真的是对方的感受，还是我自己的投射？你把“理解”当成一门手艺来打磨，每一次共情都带着校准。AI可以生成无限温柔的话语，而你给出的是一个人真正被另一个人看见的瞬间。'},
+  '落地导航星':{icon:'img/role-10.png',one:'用身体校验方向、用价值观定航线、用理性推进的人',desc:'你做事有一种让人安心的“实在”。遇到大事你会先安静一下，像把手放在地面上感受震动的方向——身体告诉你的，你信。然后你用价值观定下航线，用逻辑一步一步推进。漂亮的理论飘过你头顶，短期的诱惑闪过你眼前，你都看见了，但脚没有挪。世界越来越虚拟、越来越悬浮，你是那颗还稳稳踩在泥土里的星，替身边的人标出“哪里可以落脚”。'}
+};
+
+const ARCHETYPE_MAP = {
+  'COG+META+INT':'跨域跃迁者','COG+META+REL':'跨域跃迁者','COG+META+SYM':'意义炼金师','COG+META+EMB':'深潮潜听者','COG+META+ETH':'雾中校准者',
+  'COG+INT+REL':'多系统调音师','COG+INT+SYM':'意义炼金师','COG+INT+EMB':'深潮潜听者','COG+INT+ETH':'柔性裁决者','COG+REL+SYM':'意义炼金师',
+  'COG+REL+EMB':'落地导航星','COG+REL+ETH':'柔性裁决者','COG+SYM+EMB':'共鸣织梦体','COG+SYM+ETH':'柔性裁决者','COG+EMB+ETH':'落地导航星',
+  'META+INT+REL':'多系统调音师','META+INT+SYM':'意义炼金师','META+INT+EMB':'深潮潜听者','META+INT+ETH':'柔性裁决者','META+REL+SYM':'镜面叙事者',
+  'META+REL+EMB':'深潮潜听者','META+REL+ETH':'边界守夜人','META+SYM+EMB':'深潮潜听者','META+SYM+ETH':'雾中校准者','META+EMB+ETH':'雾中校准者',
+  'INT+REL+SYM':'多系统调音师','INT+REL+EMB':'共鸣织梦体','INT+REL+ETH':'多系统调音师','INT+SYM+EMB':'共鸣织梦体','INT+SYM+ETH':'意义炼金师',
+  'INT+EMB+ETH':'柔性裁决者','REL+SYM+EMB':'共鸣织梦体','REL+SYM+ETH':'边界守夜人','REL+EMB+ETH':'落地导航星','SYM+EMB+ETH':'落地导航星'
+};
+
+const TOP3_COMMENTS = {
+  COG:'你拆解问题的速度和精度是你最稳定的核心优势。复杂信息进来，你能迅速找到结构。',
+  META:'你对自己思维过程的觉察力非常突出。这让你在不确定中比多数人更清醒。',
+  INT:'你最突出的能力是同时容纳多个层面的复杂性，并在其中找到行动方向。',
+  REL:'你在关系中的感知力和回应能力是你最稳定的优势。人们在你面前会感到被接住。',
+  SYM:'你用意象和叙事组织经验的能力非常突出。别人说不清的东西，你能找到表达。',
+  EMB:'你的身体觉察力是你最稳定的信息源。很多人忽略的信号，你能收到。',
+  ETH:'你对“对错”和“代价”的敏感度非常高。你的决策里带着一条稳定的价值观锚线。'
+};
+
+const DIM_COMMENTS = {
+  COG:{H:'混沌是你的主场，别人还在懵的时候你已经画好了结构图。',M:'有时候能抓住重点，有时候会被信息流带着走，看状态。',L:'顺着感觉来，框架什么的随缘，先干再说。'},
+  META:{H:'内置刹车系统，结论出来之前先自检三遍。',M:'偶尔能意识到自己在想歪，但刹车不总踩得住。',L:'想到就干，效率拉满，偶尔翻车也不怕。'},
+  INT:{H:'脑子里同时跑着五六条线，还能不打结。',M:'偶尔能看到全局，压力大了就先管眼前的。',L:'一件事一件事来，专注是你的武器。'},
+  REL:{H:'人群里的天线，对方一个眼神你就收到信号了。',M:'共情在线，但高压冲突来了会有点懵。',L:'关系嘛，把事说清楚就行，别太复杂。'},
+  SYM:{H:'一个比喻就能说清别人讲半天的事，画面感拉满。',M:'偶尔被某个意象击中，但不总能把感觉变成表达。',L:'逻辑和事实就够用了，比喻什么的不太需要。'},
+  EMB:{H:'身体是你的第一预警系统，头脑还没反应过来它已经知道了。',M:'偶尔能听到身体的信号，大多数时候还是脑子说了算。',L:'身体？等它罢工了再说吧。'},
+  ETH:{H:'心里有条线，不管有没有人看着，该守的都守。',M:'有底线，但压力大了偶尔会摇一摇。',L:'灵活务实，适应力强，规则是参考不是命令。'}
+};
+
+const ORDER_FALLBACK = ['INT','META','COG','ETH','REL','EMB','SYM'];
+const state = {current:0,answers:Array(56).fill(null)};
+let radar = null;
+
+const els = {
+  home:document.getElementById('screen-home'),
+  quiz:document.getElementById('screen-quiz'),
+  loading:document.getElementById('screen-loading'),
+  result:document.getElementById('screen-result'),
+  startBtn:document.getElementById('startBtn'),
+  resumeBtn:document.getElementById('resumeBtn'),
+  clearBtn:document.getElementById('clearBtn'),
+  prevBtn:document.getElementById('prevBtn'),
+  nextBtn:document.getElementById('nextBtn'),
+  progressText:document.getElementById('progressText'),
+  progressPercent:document.getElementById('progressPercent'),
+  progressBar:document.getElementById('progressBar'),
+  questionIndex:document.getElementById('questionIndex'),
+  questionTitle:document.getElementById('questionTitle'),
+  optionAText:document.getElementById('optionAText'),
+  optionBText:document.getElementById('optionBText'),
+  strengthGrid:document.getElementById('strengthGrid'),
+  rolePortrait:document.getElementById('rolePortrait'),
+  roleName:document.getElementById('roleName'),
+  roleOne:document.getElementById('roleOne'),
+  roleDesc:document.getElementById('roleDesc'),
+  top3List:document.getElementById('top3List'),
+  dimList:document.getElementById('dimList'),
+  restartBtn:document.getElementById('restartBtn'),
+  shareBtn:document.getElementById('shareBtn'),
+  shareSection:document.getElementById('shareSection'),
+  sharePortrait:document.getElementById('sharePortrait'),
+  shareRole:document.getElementById('shareRole'),
+  shareOne:document.getElementById('shareOne'),
+  shareDesc:document.getElementById('shareDesc'),
+  qrImage:document.getElementById('qrImage'),
+  downloadShareBtn:document.getElementById('downloadShareBtn')
+};
+
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function loadState(){ try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')}catch{return null} }
+function clearState(){ localStorage.removeItem(STORAGE_KEY) }
+function show(screen){ [els.home,els.quiz,els.loading,els.result].forEach(x=>x.classList.add('hidden')); screen.classList.remove('hidden'); window.scrollTo({top:0,behavior:'smooth'}); }
+function variance(arr){ const mean=arr.reduce((a,b)=>a+b,0)/arr.length; return arr.reduce((s,x)=>s+Math.pow(x-mean,2),0)/arr.length; }
+function getLevel(score){ if(score>=70) return 'H'; if(score>=40) return 'M'; return 'L'; }
+
+function renderQuestion(){
+  const q = QUESTIONS[state.current];
+  const idx = state.current + 1;
+  const pct = Math.round((idx / QUESTIONS.length) * 100);
+  els.progressText.textContent = `${idx} / ${QUESTIONS.length}`;
+  els.progressPercent.textContent = `${pct}%`;
+  els.progressBar.style.width = `${pct}%`;
+  els.questionIndex.textContent = `第 ${idx} 题`;
+  els.questionTitle.textContent = q.stem;
+  els.optionAText.textContent = q.a;
+  els.optionBText.textContent = q.b;
+  els.strengthGrid.innerHTML = '';
+
+  ANSWER_OPTIONS.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='option'+(state.answers[state.current]===opt.value?' active':'');
+    btn.innerHTML = `<strong>${opt.label}</strong>`;
+    btn.addEventListener('click',()=>{
+      state.answers[state.current]=opt.value;
+      saveState();
+      renderQuestion();
+    });
+    els.strengthGrid.appendChild(btn);
+  });
+
+  els.prevBtn.disabled = state.current===0;
+  els.prevBtn.style.opacity = state.current===0 ? .45 : 1;
+  els.nextBtn.textContent = state.current===QUESTIONS.length-1 ? '生成结果' : '下一题';
+}
+
+function buildDimensionStats(){
+  const buckets = {COG:[],META:[],INT:[],REL:[],SYM:[],EMB:[],ETH:[]};
+  QUESTIONS.forEach((q,i)=> buckets[q.dim].push(Number(state.answers[i] ?? 0)));
+  return Object.keys(buckets).map(key=>{
+    const items=buckets[key];
+    const raw=items.reduce((a,b)=>a+b,0);
+    const score=Math.round((raw/24)*100);
+    const peak=Math.max(...items);
+    const density=items.filter(x=>x>=2).length;
+    const consistency=variance(items);
+    return {id:key,key,name:DIMENSIONS[key].name,short:DIMENSIONS[key].short,items,raw,score,peak,density,consistency};
+  });
+}
+
+function getTop3(stats){
+  const sorted=[...stats].sort((a,b)=>{
+    if(b.score!==a.score) return b.score-a.score;
+    if(b.peak!==a.peak) return b.peak-a.peak;
+    if(b.density!==a.density) return b.density-a.density;
+    if(a.consistency!==b.consistency) return a.consistency-b.consistency;
+    return ORDER_FALLBACK.indexOf(a.id)-ORDER_FALLBACK.indexOf(b.id);
+  });
+  return sorted.slice(0,3);
+}
+
+function getArchetype(top3){
+  const key = top3.map(d=>d.id).sort().join('+');
+  return ARCHETYPE_MAP[key] || '跨域跃迁者';
+}
+
+function renderRadar(stats, top3){
+  const ctx = document.getElementById('radarChart');
+  if(radar) radar.destroy();
+  radar = new Chart(ctx, {
+    type:'radar',
+    data:{
+      labels:stats.map(s=>s.short),
+      datasets:[{
+        label:'元能力分布',
+        data:stats.map(s=>s.score),
+        backgroundColor:'rgba(91,91,214,.16)',
+        borderColor:'rgba(91,91,214,.9)',
+        borderWidth:2,
+        pointBackgroundColor:stats.map(s=> top3.find(t=>t.id===s.id) ? 'rgba(91,91,214,1)' : 'rgba(87,197,207,1)'),
+        pointRadius:4
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{r:{min:0,max:100,ticks:{stepSize:25,backdropColor:'transparent'},grid:{color:'rgba(31,36,48,.08)'},pointLabels:{color:'#374151',font:{size:13,weight:'700'}},angleLines:{color:'rgba(31,36,48,.08)'}}}
+    }
+  });
+}
+
+function populateShare(role, detail){
+  els.sharePortrait.innerHTML = `<img src="${detail.icon}" alt="${role}">`;
+  els.shareRole.textContent = role;
+  els.shareOne.textContent = detail.one;
+  els.shareDesc.textContent = detail.desc;
+  els.qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(SITE_URL)}`;
+}
+
+function showResult(){
+  show(els.loading);
+  setTimeout(()=>{
+    const stats = buildDimensionStats();
+    const top3 = getTop3(stats);
+    const role = getArchetype(top3);
+    const detail = ROLE_DETAILS[role];
+
+    els.rolePortrait.innerHTML = `<img src="${detail.icon}" alt="${role}">`;
+    els.roleName.textContent = role;
+    els.roleOne.textContent = detail.one;
+    els.roleDesc.textContent = detail.desc;
+
+    els.top3List.innerHTML = top3.map((d,idx)=>`
+      <div class="item">
+        <strong>${idx+1}. ${d.name}<span class="score">${d.score}分</span></strong>
+        <span class="pill">${d.short}</span>
+        <p>${TOP3_COMMENTS[d.id]}</p>
+      </div>
+    `).join('');
+
+    const sortedStats = [...stats].sort((a,b)=>b.score-a.score);
+    els.dimList.innerHTML = sortedStats.map(d=>{
+      const level = getLevel(d.score);
+      return `
+        <div class="item">
+          <strong>${d.short} · ${d.name}<span class="pill">${level}</span><span class="score">${d.score}分</span></strong>
+          <p>${DIM_COMMENTS[d.id][level]}</p>
+        </div>
+      `;
+    }).join('');
+
+    renderRadar(stats, top3);
+    populateShare(role, detail);
+    saveState();
+    show(els.result);
+  }, 900);
+}
+
+function startFresh(){
+  state.current = 0;
+  state.answers = Array(56).fill(null);
+  saveState();
+  renderQuestion();
+  show(els.quiz);
+}
+
+els.startBtn.addEventListener('click', startFresh);
+els.resumeBtn.addEventListener('click', ()=>{
+  const loaded=loadState();
+  if(loaded){
+    state.current = loaded.current || 0;
+    state.answers = loaded.answers || Array(56).fill(null);
+  }
+  renderQuestion();
+  show(els.quiz);
+});
+els.clearBtn.addEventListener('click', ()=>{
+  clearState();
+  els.resumeBtn.classList.add('hidden');
+  els.clearBtn.classList.add('hidden');
+  startFresh();
+});
+els.prevBtn.addEventListener('click', ()=>{
+  if(state.current>0){ state.current--; saveState(); renderQuestion(); }
+});
+els.nextBtn.addEventListener('click', ()=>{
+  if(state.answers[state.current]==null){ alert('先选一个更像你的方向。'); return; }
+  if(state.current < QUESTIONS.length-1){ state.current++; saveState(); renderQuestion(); }
+  else { showResult(); }
+});
+els.restartBtn.addEventListener('click', ()=>{
+  if(confirm('要重新开始测试吗？当前结果会被覆盖。')) startFresh();
+});
+els.shareBtn.addEventListener('click', ()=>{
+  els.shareSection.classList.remove('hidden');
+  window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+});
+els.downloadShareBtn.addEventListener('click', async ()=>{
+  const node = document.getElementById('shareCard');
+  const canvas = await html2canvas(node,{scale:2,backgroundColor:null});
+  const link = document.createElement('a');
+  link.download = 'meta-capability-share-card.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+});
+
+(function init(){
+  const loaded = loadState();
+  if(loaded && Array.isArray(loaded.answers) && loaded.answers.some(v=>v!=null)){
+    state.current = loaded.current || 0;
+    state.answers = loaded.answers;
+    els.resumeBtn.classList.remove('hidden');
+    els.clearBtn.classList.remove('hidden');
+  }
+})();
+</script>
+</body>
+</html>
