@@ -72,6 +72,7 @@
     .strength-grid{display:grid;gap:12px;margin-top:18px}
     .option{width:100%;text-align:left;padding:14px 15px;border-radius:18px;border:1px solid var(--line);background:#fff;color:var(--text)}
     .option.active{border-color:rgba(91,91,214,.25);background:linear-gradient(180deg,#f4f4ff 0%,#eefafd 100%);box-shadow:0 10px 24px rgba(91,91,214,.08)}
+    .option.selected{border-color:var(--primary);background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;transform:scale(1.04);box-shadow:0 10px 28px rgba(91,91,214,.28);transition:all .18s ease}
     .option small{display:block;color:var(--muted);margin-top:4px}
     .section-title{font-size:20px;font-weight:900;margin-bottom:12px}
     .result-hero{display:grid;gap:10px;text-align:center}
@@ -410,13 +411,17 @@ function renderQuestion(){
     btn.addEventListener('click',()=>{
       state.answers[state.current]=opt.value;
       saveState();
-      if(state.current < QUESTIONS.length-1){
-        state.current++;
-        saveState();
-        renderQuestion();
-      } else {
-        showResult();
-      }
+      els.strengthGrid.querySelectorAll('.option').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      setTimeout(()=>{
+        if(state.current < QUESTIONS.length-1){
+          state.current++;
+          saveState();
+          renderQuestion();
+        } else {
+          showResult();
+        }
+      }, 350);
     });
     els.strengthGrid.appendChild(btn);
   });
