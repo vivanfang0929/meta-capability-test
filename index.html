@@ -146,7 +146,6 @@
       <div class="strength-grid" id="strengthGrid"></div>
       <div class="row">
         <button class="btn-secondary" id="prevBtn">上一题</button>
-        <button class="btn-primary" id="nextBtn">下一题</button>
       </div>
     </div>
   </section>
@@ -358,7 +357,7 @@ const els = {
   resumeBtn:document.getElementById('resumeBtn'),
   clearBtn:document.getElementById('clearBtn'),
   prevBtn:document.getElementById('prevBtn'),
-  nextBtn:document.getElementById('nextBtn'),
+
   progressText:document.getElementById('progressText'),
   progressPercent:document.getElementById('progressPercent'),
   progressBar:document.getElementById('progressBar'),
@@ -411,14 +410,20 @@ function renderQuestion(){
     btn.addEventListener('click',()=>{
       state.answers[state.current]=opt.value;
       saveState();
-      renderQuestion();
+      if(state.current < QUESTIONS.length-1){
+        state.current++;
+        saveState();
+        renderQuestion();
+      } else {
+        showResult();
+      }
     });
     els.strengthGrid.appendChild(btn);
   });
 
   els.prevBtn.disabled = state.current===0;
   els.prevBtn.style.opacity = state.current===0 ? .45 : 1;
-  els.nextBtn.textContent = state.current===QUESTIONS.length-1 ? '生成结果' : '下一题';
+
 }
 
 function buildDimensionStats(){
@@ -551,11 +556,7 @@ els.clearBtn.addEventListener('click', ()=>{
 els.prevBtn.addEventListener('click', ()=>{
   if(state.current>0){ state.current--; saveState(); renderQuestion(); }
 });
-els.nextBtn.addEventListener('click', ()=>{
-  if(state.answers[state.current]==null){ alert('先选一个更像你的方向。'); return; }
-  if(state.current < QUESTIONS.length-1){ state.current++; saveState(); renderQuestion(); }
-  else { showResult(); }
-});
+
 els.restartBtn.addEventListener('click', ()=>{
   if(confirm('要重新开始测试吗？当前结果会被覆盖。')) startFresh();
 });
