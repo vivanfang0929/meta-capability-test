@@ -6,6 +6,7 @@
   <title>AI时代人类元能力测评 · 第二版</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
   <style>
     :root{
       --bg:#f5f7fb;
@@ -223,7 +224,7 @@
         <div class="share-desc" id="shareDesc"></div>
         <div class="qr-wrap">
           <div class="qr-note">扫码测测你的元能力形状</div>
-          <img class="qr" id="qrImage" alt="二维码" />
+          <canvas class="qr" id="qrCanvas"></canvas>
         </div>
         <div class="share-foot">🧠 AI时代人类元能力测评 · 56道题发现你的能力形状</div>
       </div>
@@ -398,7 +399,7 @@ const els = {
   shareRole:document.getElementById('shareRole'),
   shareOne:document.getElementById('shareOne'),
   shareDesc:document.getElementById('shareDesc'),
-  qrImage:document.getElementById('qrImage'),
+  qrCanvas:document.getElementById('qrCanvas'),
   downloadShareBtn:document.getElementById('downloadShareBtn')
 };
 
@@ -510,7 +511,17 @@ function populateShare(role, detail){
   els.shareRole.textContent = role;
   els.shareOne.textContent = detail.one;
   els.shareDesc.textContent = detail.desc;
-  els.qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(SITE_URL)}`;
+  var qr = qrcode(0, 'M');
+  qr.addData(SITE_URL);
+  qr.make();
+  var cellSize = 3, margin = 4;
+  var mCount = qr.getModuleCount();
+  var size = mCount * cellSize + margin * 2;
+  var cv = els.qrCanvas; cv.width = size; cv.height = size;
+  var cx = cv.getContext('2d');
+  cx.fillStyle = '#fff'; cx.fillRect(0,0,size,size);
+  for(var r=0;r<mCount;r++) for(var c=0;c<mCount;c++){ if(qr.isDark(r,c)){ cx.fillStyle='#1f2430'; cx.fillRect(c*cellSize+margin, r*cellSize+margin, cellSize, cellSize); } }
+  void(0); // `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(SITE_URL)}`;
 }
 
 function showResult(){
@@ -608,9 +619,3 @@ els.downloadShareBtn.addEventListener('click', async ()=>{
 </script>
 </body>
 </html>
-    
-   
-
- 
- 
-  
