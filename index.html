@@ -54,31 +54,37 @@
     .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
     .row-nav{margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f5}
     button{
-      appearance:none;border:0;cursor:pointer;border-radius:16px;font-size:16px;font-weight:800;
+      appearance:none;border:0;cursor:pointer;border-radius:16px;font-size:15px;font-weight:600;
       transition:.18s ease;padding:14px 16px;
     }
     button:active{transform:scale(.98)}
     .btn-primary{background:linear-gradient(90deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 10px 24px rgba(91,91,214,.24)}
     .btn-secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
     .btn-ghost{background:transparent;color:var(--muted)}
-    .progress-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;margin-bottom:10px}
+    .progress-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;font-weight:400;margin-bottom:10px}
     .progress{height:6px;background:#edf1f7;border-radius:999px;overflow:hidden}
     .bar{height:100%;width:0;background:linear-gradient(90deg,#6b6bff 0%,#57c5cf 100%);transition:width .25s ease}
-    .q-index{display:inline-block;color:var(--primary);font-size:13px;font-weight:800;margin-bottom:12px;padding:5px 12px;border-radius:999px;background:var(--soft)}
-    .q-title{font-size:24px;line-height:1.5;font-weight:850;letter-spacing:-.02em}
+    .q-index{display:inline-block;color:var(--primary);font-size:13px;font-weight:600;margin-bottom:12px;padding:5px 12px;border-radius:999px;background:var(--soft)}
+    .q-title{font-size:22px;line-height:1.5;font-weight:700;letter-spacing:-.02em}
     .ab-box{display:grid;gap:0;margin-top:18px}
-    .ab-card{border:1px solid var(--line);border-radius:18px;padding:18px 16px 18px 20px;background:#fff;position:relative;border-left:3px solid var(--primary)}
-    .ab-card.b{border-left-color:#57c5cf}
-    .ab-tag{display:inline-block;font-size:11px;font-weight:800;color:var(--primary);margin-bottom:10px;padding:3px 10px;border-radius:999px;background:var(--soft)}
+    .ab-card{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:18px;padding:16px 16px;background:#fff}
+    .ab-tag{display:inline-block;flex-shrink:0;font-size:13px;font-weight:600;color:var(--primary);padding:3px 10px;border-radius:999px;background:var(--soft);margin-top:2px}
     .ab-card.b .ab-tag{color:#57c5cf;background:rgba(87,197,207,.1)}
-    .ab-text{font-size:15px;line-height:1.7;text-align:left}
-    .vs-divider{text-align:center;font-size:12px;font-weight:900;color:var(--muted);padding:8px 0;letter-spacing:.05em}
+    .ab-text{font-size:17px;line-height:1.7;font-weight:400;text-align:left;color:var(--text)}
+    .vs-divider{text-align:center;font-size:13px;font-weight:400;color:#999;padding:8px 0;letter-spacing:.05em}
     .quiz-divider{height:1px;background:#f0f0f5;margin:18px 0 16px}
     .strength-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-    .option{width:100%;text-align:center;padding:16px 10px;border-radius:20px;border:1px solid var(--line);background:#fff;color:var(--text);font-size:15px;font-weight:700;transition:.18s ease}
+    .option{width:100%;text-align:center;padding:12px 10px;border-radius:20px;border:1px solid var(--line);background:#fff;color:var(--text);font-size:15px;font-weight:500;transition:.18s ease}
     .option:active{transform:scale(.98);box-shadow:0 4px 12px rgba(0,0,0,.06)}
-    .option.active{border-color:rgba(91,91,214,.2);background:rgba(91,91,214,.05);color:var(--primary);font-weight:800;border-bottom:2px solid var(--primary)}
-    .option.selected{border-color:rgba(91,91,214,.3);background:rgba(91,91,214,.05);color:var(--primary);font-weight:800;border-bottom:2px solid var(--primary);transform:scale(1.03);box-shadow:0 6px 18px rgba(91,91,214,.12);transition:all .18s ease}
+    .strength-grid .option:nth-child(1){border-left:2px solid rgba(91,91,214,.6);background:rgba(91,91,214,.08);color:#5b5bd6}
+    .strength-grid .option:nth-child(2){border-left:2px solid rgba(91,91,214,.3);background:rgba(91,91,214,.03);color:#8585c9}
+    .strength-grid .option:nth-child(3){border-left:2px solid rgba(87,197,207,.3);background:rgba(87,197,207,.03);color:#6ba8b0}
+    .strength-grid .option:nth-child(4){border-left:2px solid rgba(87,197,207,.6);background:rgba(87,197,207,.08);color:#57c5cf}
+    .option.active:nth-child(1),.option.selected:nth-child(1){border-left:3px solid rgba(91,91,214,1);background:rgba(91,91,214,.16);font-weight:600;box-shadow:0 4px 14px rgba(91,91,214,.1)}
+    .option.active:nth-child(2),.option.selected:nth-child(2){border-left:3px solid rgba(91,91,214,1);background:rgba(91,91,214,.08);font-weight:600;box-shadow:0 4px 14px rgba(91,91,214,.08)}
+    .option.active:nth-child(3),.option.selected:nth-child(3){border-left:3px solid rgba(87,197,207,1);background:rgba(87,197,207,.08);font-weight:600;box-shadow:0 4px 14px rgba(87,197,207,.08)}
+    .option.active:nth-child(4),.option.selected:nth-child(4){border-left:3px solid rgba(87,197,207,1);background:rgba(87,197,207,.16);font-weight:600;box-shadow:0 4px 14px rgba(87,197,207,.1)}
+    .option.selected{transform:scale(1.03);transition:all .18s ease}
     .option small{display:block;color:var(--muted);margin-top:4px}
     .section-title{font-size:20px;font-weight:900;margin-bottom:12px}
     .result-hero{display:grid;gap:10px;text-align:center}
@@ -107,7 +113,7 @@
     .share-foot{margin-top:14px;font-size:11px;color:#7a7f8f;line-height:1.5}
     @media (max-width:480px){
       .title{font-size:24px}
-      .q-title{font-size:21px}
+      .q-title{font-size:20px}
       .role-name{font-size:28px}
       .card{padding:18px 16px}
       canvas{height:280px!important}
@@ -419,7 +425,7 @@ function renderQuestion(){
   ANSWER_OPTIONS.forEach(opt=>{
     const btn=document.createElement('button');
     btn.className='option'+(state.answers[state.current]===opt.value?' active':'');
-    btn.innerHTML = `<strong>${opt.label}</strong>`;
+    btn.textContent = opt.label;
     btn.addEventListener('click',()=>{
       state.answers[state.current]=opt.value;
       saveState();
